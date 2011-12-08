@@ -1844,16 +1844,19 @@ void PG::update_stats()
     info.stats.last_scrub = info.history.last_scrub;
     info.stats.last_scrub_stamp = info.history.last_scrub_stamp;
     info.stats.last_epoch_clean = info.history.last_epoch_clean;
+
+    if (info.stats.state != state) {
+      info.stats.state = state;
+      info.stats.state_stamp = ceph_clock_now(g_ceph_context);
+    }
+
+    info.stats.log_size = ondisklog.length();
+    info.stats.ondisk_log_size = ondisklog.length();
+    info.stats.log_start = log.tail;
+    info.stats.ondisk_log_start = log.tail;
+
     pg_stats_valid = true;
     pg_stats_stable = info.stats;
-    pg_stats_stable.state = state;
-    pg_stats_stable.up = up;
-    pg_stats_stable.acting = acting;
-
-    pg_stats_stable.log_size = ondisklog.length();
-    pg_stats_stable.ondisk_log_size = ondisklog.length();
-    pg_stats_stable.log_start = log.tail;
-    pg_stats_stable.ondisk_log_start = log.tail;
 
     pg_stats_stable.stats.calc_copies_degraded(get_osdmap()->get_pg_size(info.pgid), acting.size());
 
@@ -3516,6 +3519,13 @@ void PG::start_peering_interval(const OSDMapRef lastmap,
 
   up = newup;
   acting = newacting;
+
+  if (info.stats.up != up ||
+      info.stats.acting != acting) {
+    info.stats.up = up;
+    info.stats.acting = acting;
+    info.stats.mapping_epoch = info.history.same_interval_since;
+  }
 
   int role = osdmap->calc_pg_role(osd->whoami, acting, acting.size());
   set_role(role);

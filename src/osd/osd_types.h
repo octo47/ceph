@@ -836,6 +836,7 @@ struct pg_stat_t {
   eversion_t version;
   eversion_t reported;
   __u32 state;
+  utime_t state_stamp;
 
   eversion_t log_start;         // (log_start,version]
   eversion_t ondisk_log_start;  // there may be more on disk
@@ -854,17 +855,20 @@ struct pg_stat_t {
   int64_t ondisk_log_size;    // >= active_log_size
 
   vector<int> up, acting;
+  epoch_t mapping_epoch;
 
-
-  pg_stat_t() : state(0),
-		created(0), parent_split_bits(0), 
-		log_size(0), ondisk_log_size(0)
+  pg_stat_t()
+    : state(0),
+      created(0), parent_split_bits(0),
+      log_size(0), ondisk_log_size(0),
+      mapping_epoch(0)
   { }
 
   void dump(Formatter *f) const {
     f->dump_stream("version") << version;
     f->dump_stream("reported") << reported;
     f->dump_string("state", pg_state_string(state));
+    f->dump_stream("state_stamp") << state_stamp;
     f->dump_stream("log_start") << log_start;
     f->dump_stream("ondisk_log_start") << ondisk_log_start;
     f->dump_unsigned("created", created);
@@ -884,15 +888,17 @@ struct pg_stat_t {
     for (vector<int>::const_iterator p = acting.begin(); p != acting.end(); ++p)
       f->dump_int("osd", *p);
     f->close_section();
+    f->dump_unsigned("mapping_epoch", mapping_epoch);
   }
 
   void encode(bufferlist &bl) const {
-    __u8 v = 7;
+    __u8 v = 8;
     ::encode(v, bl);
 
     ::encode(version, bl);
     ::encode(reported, bl);
     ::encode(state, bl);
+    ::encode(state_stamp, bl);
     ::encode(log_start, bl);
     ::encode(ondisk_log_start, bl);
     ::encode(created, bl);
@@ -906,16 +912,19 @@ struct pg_stat_t {
     ::encode(ondisk_log_size, bl);
     ::encode(up, bl);
     ::encode(acting, bl);
+    ::encode(mapping_epoch, bl);
   }
   void decode(bufferlist::iterator &bl) {
     __u8 v;
     ::decode(v, bl);
-    if (v > 7)
-      throw buffer::malformed_input("unknown pg_stat_t encoding version > 4");
+    if (v > 8)
+      throw buffer::malformed_input("unknown pg_stat_t encoding version > 8");
 
     ::decode(version, bl);
     ::decode(reported, bl);
     ::decode(state, bl);
+    if (v >= 8)
+      ::decode(state_stamp, bl);
     ::decode(log_start, bl);
     ::decode(ondisk_log_start, bl);
     ::decode(created, bl);
@@ -962,6 +971,8 @@ struct pg_stat_t {
       ::decode(ondisk_log_size, bl);
       ::decode(up, bl);
       ::decode(acting, bl);
+      if (v >= 8)
+	::decode(mapping_epoch, bl);
     }
   }
 
