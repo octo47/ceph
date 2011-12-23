@@ -1072,6 +1072,7 @@ public:
   void reply_op_error(MOSDOp *op, int r);
   void reply_op_error(MOSDOp *op, int r, eversion_t v);
   void handle_misdirected_op(PG *pg, MOSDOp *op);
+  bool check_op_mapping(MOSDOp *op, bool *was_valid_then);
 
   void handle_rep_scrub(MOSDRepScrub *m);
   void handle_scrub(class MOSDScrub *m);
