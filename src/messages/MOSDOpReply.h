@@ -58,6 +58,13 @@ public:
 
   void add_flags(int f) { flags |= f; }
 
+  void claim_op_out_data(vector<OSDOp>& o) {
+    assert(ops.size() == o.size());
+    for (unsigned i = 0; i < o.size(); i++) {
+      ops[i].outdata.claim(o[i].outdata);
+    }
+  }
+
   /**
    * get retry attempt
    *
@@ -88,6 +95,10 @@ public:
     osdmap_epoch = e;
     reassert_version = req->reassert_version;
     retry_attempt = req->get_retry_attempt();
+
+    // zero out ops payload_len
+    for (unsigned i = 0; i < ops.size(); i++)
+      ops[i].op.payload_len = 0;
   }
   MOSDOpReply() {}
 private:
@@ -95,6 +106,9 @@ private:
 
 public:
   virtual void encode_payload(CephContext *cct) {
+
+    merge_osd_op_vector_out_data(ops, data);
+
     if (!connection->has_feature(CEPH_FEATURE_PGID64)) {
       ceph_osd_reply_head head;
       memset(&head, 0, sizeof(head));
@@ -110,7 +124,7 @@ public:
       }
       ::encode_nohead(oid.name, payload);
     } else {
-      header.version = 3;
+      header.version = 4;
       ::encode(oid, payload);
       ::encode(pgid, payload);
       ::encode(flags, payload);
@@ -161,6 +175,9 @@ public:
       else
 	retry_attempt = -1;
     }
+
+    if (header.version >= 4)
+      split_osd_op_vector_out_data(ops, data);
   }
 
   const char *get_type_name() { return "osd_op_reply"; }
