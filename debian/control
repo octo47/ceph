@@ -6,7 +6,7 @@ Vcs-Git: git://github.com/NewDreamNetwork/ceph.git
 Vcs-Browser: https://github.com/NewDreamNetwork/ceph
 Maintainer: Laszlo Boszormenyi (GCS) <gcs@debian.hu>
 Uploaders: Sage Weil <sage@newdream.net>
-Build-Depends: debhelper (>= 6.0.7~), autotools-dev, autoconf, automake, libfuse-dev, libboost-dev (>= 1.34), libedit-dev, libcrypto++-dev, libtool, libexpat1-dev, libfcgi-dev, libatomic-ops-dev, libgoogle-perftools-dev [i386 amd64], pkg-config, libgtkmm-2.4-dev, python, python-support, libcurl4-gnutls-dev, libkeyutils-dev, uuid-dev
+Build-Depends: debhelper (>= 6.0.7~), autotools-dev, autoconf, automake, libfuse-dev, libboost-dev (>= 1.34), libedit-dev, libcrypto++-dev, libtool, libexpat1-dev, libfcgi-dev, libatomic-ops-dev, libgoogle-perftools-dev [i386 amd64], pkg-config, libgtkmm-2.4-dev, python, python-support, libcurl4-gnutls-dev, libkeyutils-dev, uuid-dev, openjdk-6-jdk
 Standards-Version: 3.9.1
 
 Package: ceph
@@ -246,6 +246,21 @@ Description: Ceph distributed file system client library (development files)
  .
  This package contains development files needed for building applications that
  link against libcephfs.
+
+Package: libcephfs1-hadoop
+Conflicts: libcephfs-hadoop, libceph-hadoop, libceph1-hadoop
+Replaces: libcephfs-hadoop, libceph-hadoop, libceph1-hadoop
+Architecture: linux-any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}, java6-jre | java6-runtime
+Description: Ceph distributed file system client library (Hadoop intergration)
+ Ceph is a distributed network file system designed to provide
+ excellent performance, reliability, and scalability.  This is a
+ shared library allowing applications to access a Ceph distributed
+ file system via a POSIX-like interface.
+ .
+ This package contains hadoop integration
+
 
 Package: librgw1
 Conflicts: librgw, librgw1
