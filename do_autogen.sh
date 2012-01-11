@@ -34,7 +34,9 @@ do
     h) usage
         exit 0;;
 
-    H) HADOOP_FLAGS="--with-hadoop";;
+    H) HADOOP_FLAGS="--with-hadoop"
+       CPPFLAGS=" -I/usr/lib/jvm/java-6-openjdk/include -I/usr/lib/jvm/java-6-openjdk/include/linux"
+	;;
 
     v) verbose=1;;
 
