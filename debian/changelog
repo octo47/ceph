@@ -1,4 +1,16 @@
-ceph (0.39-1ubuntu1hadoop2) lucid; urgency=low
+ceph (0.41-1hadoop1~lucid) lucid; urgency=low
+
+  * Merge with upstream
+
+ -- Andrey Stepachev <octo47@gmail.com>  Wed, 11 Jan 2012 00:27:14 +0400
+
+ceph (0.39-1hadoop3~lucid) lucid; urgency=low
+
+  * Java dependencies
+
+ -- Andrey Stepachev <octo47@gmail.com>  Mon, 26 Dec 2011 21:27:52 +0400
+
+ceph (0.39-1ubuntu1hadoop1) lucid; urgency=low
 
   * Added ceph hadoop integration
 
