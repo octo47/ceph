@@ -1,4 +1,4 @@
-ceph (0.40-1hadoop1) lucid; urgency=low
+ceph (0.40-1hadoop1~lucid) lucid; urgency=low
 
   * Added ceph hadoop integration
   * Fixed timestamp calculation bug in hadoop lib
