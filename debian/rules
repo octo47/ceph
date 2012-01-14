@@ -42,6 +42,9 @@ ifeq ($(shell grep -c -E '^Build-Depends:(.*,)?[[:space:]]*libgoogle-perftools-d
   extraopts += --without-tcmalloc
 endif
 
+# hadoop integration
+extraopts += --with-hadoop
+extracpp += -I/usr/lib/jvm/java-6-openjdk/include -I/usr/lib/jvm/java-6-openjdk/include/linux
 
 configure: configure-stamp
 configure-stamp:
@@ -53,7 +56,7 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	./autogen.sh
-	./configure --prefix=/usr --sbindir=/sbin --localstatedir=/var \
+	CPPFLAGS="$(CPPFALGS) $(extracpp)" ./configure --prefix=/usr --sbindir=/sbin --localstatedir=/var \
 		--sysconfdir=/etc $(extraopts) $(confflags)
 	$(MAKE)
 	cp src/init-ceph debian/ceph.init
