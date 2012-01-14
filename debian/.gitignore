@@ -5,6 +5,8 @@
 /ceph-dbg
 /ceph-fuse-dbg
 /ceph-fuse
+/ceph-common-dbg
+/ceph-common
 /ceph.init
 /ceph.logrotate
 /*.debhelper
@@ -13,6 +15,7 @@
 /libcephfs1-dbg
 /libcephfs-dev
 /libcephfs1
+/libcephfs1-hadoop
 /librados2-dbg
 /librados-dev
 /librados2
