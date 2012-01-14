@@ -1,8 +1,16 @@
-ceph (0.39-1ubuntu1hadoop2) lucid; urgency=low
+ceph (0.40-1hadoop1) lucid; urgency=low
 
   * Added ceph hadoop integration
+  * Fixed timestamp calculation bug in hadoop lib
+  * Fixed avoid usage of invalid handle
 
  -- Andrey Stepachev <octo47@gmail.com>  Mon, 26 Dec 2011 11:40:12 +0400
+
+ceph (0.40-1) experimental; urgency=low
+
+  * New upstream release 
+
+ -- Sage Weil <sage@newdream.net>  Fri, 13 Jan 2012 08:36:02 -0800
 
 ceph (0.39-1) experimental; urgency=low
 
