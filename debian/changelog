@@ -1,3 +1,9 @@
+ceph (0.39-1ubuntu1hadoop2) lucid; urgency=low
+
+  * Added ceph hadoop integration
+
+ -- Andrey Stepachev <octo47@gmail.com>  Mon, 26 Dec 2011 11:40:12 +0400
+
 ceph (0.39-1) experimental; urgency=low
 
   * New upstream release 
